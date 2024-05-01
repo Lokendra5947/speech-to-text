@@ -1,0 +1,200 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+ <title>Speech to Text</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body style="background-color: #f2f2f2;">
+ <div class="container mt-5">
+  <div class="row justify-content-center">
+   <div class="col-md-6">
+    <div class="card">
+     <div class="card-header">
+      Upload Audio File
+     </div>
+     <div class="card-body">
+      <form id="transcription-form" enctype="multipart/form-data">
+          <div class="form-group">
+           <label for="file-upload"><b>Select file:</b></label>
+           <input id="file-upload" type="file" name="file" class="form-control-file" accept=".mp3" style="margin-bottom: 20px">
+          </div>
+          <input type="submit" value="Transcribe" class="btn btn-primary"></input>
+      </form>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <script>
+        document.getElementById("transcription-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+        
+            const formData = new FormData(event.target);
+            const response = await fetch("/", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await response.json();
+        
+            if (data.transcription) {
+                localStorage.setItem("transcription", data.transcription);
+                localStorage.setItem("audioFileName", data.audioFileName);
+                window.location.href = "/transcribe.html";
+            } 
+   else {
+                console.error("Error:", data);
+            }
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Transcription</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+ 
+ <style>
+  h1 {
+   margin-top: 20px;
+   margin-bottom: 10px;
+   font-size: 2.5rem;
+   font-weight: bold;
+   color: #333;
+  }
+
+  p {
+   font-size: 1.2rem;
+   color: #333;
+   margin-bottom: 30px;
+  }
+
+  .container {
+   margin-top: 50px;
+   margin-bottom: 50px;
+   max-width: 600px;
+   padding: 30px;
+   background-color: #fff;
+   box-shadow: 0 0 10px rgba(0,0,0,0.2);
+   border-radius: 5px;
+  }
+ </style>
+</head>
+
+<body style="background-color: #f2f2f2;">
+ <div class="container">
+  <h1>Audio File:</h1>
+  <p id="audioFileName"></p>
+
+  <h1>Transcription:</h1>
+  <p id="transcription"></p>
+ </div>
+ 
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+ 
+ <script>
+     const audioFileName = localStorage.getItem("audioFileName");
+     const transcription = localStorage.getItem("transcription");
+     document.getElementById("audioFileName").innerHTML = audioFileName;
+     document.getElementById("transcription").innerHTML = transcription;
+ </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Speech to Text</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        h1 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            margin-top: 50px;
+            margin-bottom: 50px;
+            max-width: 600px;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f2f2f2;">
+    <div class="container">
+        <h1>Live Speech to Text</h1>
+        <p id="transcription"></p>
+    </div>
+
+    <script>
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = function(event) {
+            const result = event.results[event.results.length - 1][0].transcript;
+            document.getElementById('transcription').textContent = result;
+        };
+
+        recognition.onend = function() {
+            recognition.start();
+        };
+
+        recognition.start();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Speech to Text</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body style="background-color: #f2f2f2;">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"> Live Voice Transcription </div>
+                    <div class="card-body">
+                        <button id="start-btn" class="btn btn-primary">Start</button>
+                        <button id="stop-btn" class="btn btn-danger d-none">Stop</button>
+                        <p id="status-msg"></p>
+                        <p id="transcription"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script> const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; const recognition = new SpeechRecognition(); recognition.continuous = true; recognition.interimResults = true; recognition.lang = 'en-US'; let transcription = ''; const startBtn = document.getElementById("start-btn"); const stopBtn = document.getElementById("stop-btn"); const statusMsg = document.getElementById("status-msg"); const transcriptionElem = document.getElementById("transcription"); startBtn.addEventListener("click", () => { startBtn.classList.add("d-none"); stopBtn.classList.remove("d-none"); statusMsg.textContent = "Recognizing..."; recognition.start(); }); stopBtn.addEventListener("click", () => { startBtn.classList.remove("d-none"); stopBtn.classList.add("d-none"); statusMsg.textContent = ""; recognition.stop(); }); recognition.addEventListener("result", (e) => { const transcript = Array.from(e.results).map(result => result[0]).map(result => result.transcript).join(''); transcription += transcript; transcriptionElem.textContent = transcription; }); recognition.addEventListener("end", () => { statusMsg.textContent = ""; }); </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+
+</html> -->
